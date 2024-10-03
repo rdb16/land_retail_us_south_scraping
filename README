@@ -1,0 +1,6 @@
+Installer un venv avec python 3.12 et puis les requirements.
+créer un fichier .env à la racine avec les valeurs:
+    sender_password=""
+    sender_email=""
+    recipient=""
+    cc_email=""
