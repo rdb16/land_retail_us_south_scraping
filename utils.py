@@ -6,6 +6,7 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email import encoders
 import os
+import openpyxl
 
 
 def export_to_excell(data: list, broker):

@@ -1,10 +1,8 @@
 import os
 import subprocess
 import time
-
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
-
 from utils import export_to_excell, send_email_with_attachment
 
 
