@@ -89,6 +89,7 @@ def scrape_listings_from_html(file_path):
 
 if __name__ == "__main__":
     start_time = time.time()
+    load_dotenv()
     url = 'https://theblueoxgroup.com/listings/sale/'
     output_file = 'listing_page.html'
     # Télécharger la page HTML
@@ -110,8 +111,6 @@ if __name__ == "__main__":
     duration = (end_time - start_time)
     print("durée totale en secondes: ", int(duration), "pour: ", nb_properties )
     body = f"Le scraping du broker Blue-ox au {current_date}, \nconcerne {nb_properties} terrains ou bâtiments à vendre.\nMerci de les consulter en fichier joint"
-
-    load_dotenv()
 
     sender_email = os.getenv("sender_email")
     sender_password = os.getenv("sender_password")

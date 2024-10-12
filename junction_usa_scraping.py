@@ -43,6 +43,7 @@ def scrape_page(local_driver):
 
 if __name__ == "__main__":
     start_time = time.time()
+    load_dotenv()
     site_url = "https://junctionusa.com/listings/"
 
     chrome_options = Options()
@@ -84,14 +85,12 @@ if __name__ == "__main__":
         driver.quit()
 
     nb_properties = len(all_sale_deals)
-    filename, file_path, current_date = export_to_excell(all_sale_deals, "Junction USA")
+    filename, file_path, current_date = export_to_excell(all_sale_deals, "Junction_USA")
 
     end_time = time.time()
     duration = (end_time - start_time)
     print("durée totale en secondes: ", int(duration), "pour: ", nb_properties)
     body = f"Le scraping du broker Junction USA au {current_date}, \nconcerne {nb_properties} terrains ou bâtiments à vendre.\nMerci de les consulter en fichier joint"
-
-    load_dotenv()
 
     sender_email = os.getenv("sender_email")
     sender_password = os.getenv("sender_password")
@@ -99,4 +98,4 @@ if __name__ == "__main__":
     subject = "[Junction usa Excel en pièce jointe]"
     cc_email = os.getenv("cc_email")
 
-    # send_email_with_attachment(sender_email, sender_password, recipient_email, subject, body, file_path, cc_email)
+    send_email_with_attachment(sender_email, sender_password, recipient_email, subject, body, file_path, cc_email)

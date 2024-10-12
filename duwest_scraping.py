@@ -90,6 +90,7 @@ def scrape_properties():
 
 if __name__ == "__main__":
     start_time = time.time()
+    load_dotenv()
     result_list = scrape_properties()
     nb_properties = len(result_list)
     filename, file_path, current_date = export_to_excell(result_list, "Land_retail_us_south_scraping")
@@ -97,8 +98,6 @@ if __name__ == "__main__":
     duration = (end_time - start_time)
     print("durée totale en secondes: ", int(duration), "pour: ", nb_properties )
     body = f"Le scraping du broker DuWest au {current_date}, \nconcerne {nb_properties} terrains ou bâtiments à vendre.\nMerci de les consulter en fichier joint"
-
-    load_dotenv()
 
     sender_email = os.getenv("sender_email")
     sender_password = os.getenv("sender_password")

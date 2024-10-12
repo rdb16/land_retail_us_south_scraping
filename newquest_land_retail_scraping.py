@@ -18,9 +18,9 @@ def download_page(url, out_file):
         print(f"Error downloading page: {e}")
 
 
-def scrape_json_from_html(file_path):
+def scrape_json_from_html(html_file_path):
     # Lire le contenu du fichier HTML téléchargé
-    with open(file_path, 'r', encoding='utf-8') as file:
+    with open(html_file_path, 'r', encoding='utf-8') as file:
         html_content = file.read()
     # Parse le HTML avec BeautifulSoup
     # print(html_content)
@@ -37,18 +37,18 @@ def scrape_json_from_html(file_path):
 
 def parse_json_data(properties):
     properties_list = []
-    for property in properties:
+    for prop in properties:
         property_dict = {
-            'title': property['primary_location']['title'],
-            'address': property['primary_location']['location_text'],
-            'url': property['url'],
-            'acres_min': property['property_detail']['size_acres']['min'],
-            'acres_max': property['property_detail']['size_acres']['Max'],
-            'sqf_min': property['property_detail']['size_square_feet']['min'],
-            'sqf_max': property['property_detail']['size_square_feet']['Max'],
-            'latitude': property['primary_location']['map']['lat'],
-            'longitude': property['primary_location']['map']['lng'],
-            'contacts': property['broker']
+            'title': prop['primary_location']['title'],
+            'address': prop['primary_location']['location_text'],
+            'url': prop['url'],
+            'acres_min': prop['property_detail']['size_acres']['min'],
+            'acres_max': prop['property_detail']['size_acres']['Max'],
+            'sqf_min': prop['property_detail']['size_square_feet']['min'],
+            'sqf_max': prop['property_detail']['size_square_feet']['Max'],
+            'latitude': prop['primary_location']['map']['lat'],
+            'longitude': prop['primary_location']['map']['lng'],
+            'contacts': prop['broker']
         }
         # print(property_dict)
         properties_list.append(property_dict)
@@ -57,6 +57,7 @@ def parse_json_data(properties):
 
 if __name__ == "__main__":
     start_time = time.time()
+    load_dotenv()
     url = 'https://www.newquest.com/properties/find-a-property/?propertyType=Land&propertyType=Retail&deal_type=Sale'
     output_file = 'tmp/curl_page.html'
     # Télécharger la page HTML
@@ -79,8 +80,6 @@ if __name__ == "__main__":
     duration = (end_time - start_time)
     print("durée totale en secondes: ", int(duration), "pour: ", nb_properties)
     body = f"Le scraping du broker Newquest au {current_date}, \nconcerne {nb_properties} terrains & retails à vendre.\nTemps d'exécution du scraping en secondes: {int(duration)}\nMerci de les consulter en fichier joint"
-
-    load_dotenv()
 
     sender_email = os.getenv("sender_email")
     sender_password = os.getenv("sender_password")

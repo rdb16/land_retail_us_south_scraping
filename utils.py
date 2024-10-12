@@ -10,6 +10,7 @@ import openpyxl
 
 
 def export_to_excell(data: list, broker):
+    broker = broker.replace(' ', '_')
     df = pd.DataFrame(data)
     current_date = time.strftime("%d-%m-%Y")
     filename = f"{broker}-scrape-{current_date}.xlsx"
