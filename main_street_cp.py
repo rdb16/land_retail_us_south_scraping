@@ -23,23 +23,8 @@ def parse_main_street(site, path_to_driver):
         time.sleep(5)
         html_content = driver.page_source
 
-        # with open("tmp/html.html", "w") as fi:
+        # with open("tmp/.html", "w") as fi:
         #     fi.write(html_content)
-
-        soup = BeautifulSoup(html_content, "html.parser")
-        # # on limite la regex à un subset pour accélérer
-        # start_span = soup.find(id='line207')
-        # end_span = soup.find(id='line208')
-        # print(start_span.text)
-        # print(end_span.text)
-        #
-        # html_subset = ''
-        # if start_span and end_span:
-        #     for element in start_span.find_all_next():
-        #         if element == end_span:
-        #             break
-        #         html_subset += str(element)
-        #
 
         pattern = r"\{\"id\"\:\"[1-9][0-9]{0,2}\",\"title\":.*?png\"\}\]\}"
         matches = re.findall(pattern, html_content, re.DOTALL)
