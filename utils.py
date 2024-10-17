@@ -1,4 +1,5 @@
 import time
+from dotenv import load_dotenv
 import pandas as pd
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -59,6 +60,63 @@ def send_email_with_attachment(sender_email, sender_password, recipient_email, s
         server = smtplib.SMTP('smtp.gmail.com', 587)  # Utilisez le serveur SMTP de votre choix
         server.starttls()  # Utiliser le TLS pour sécuriser la connexion
         server.login(sender_email, sender_password)
+
+        # Envoyer l'e-mail
+        text = msg.as_string()
+        server.sendmail(sender_email, recipient_email, text)
+        print(f"E-mail envoyé avec succès à {recipient_email}")
+
+    except Exception as e:
+        print(f"Erreur lors de l'envoi de l'e-mail : {e}")
+
+    finally:
+        # Fermer la connexion au serveur SMTP
+        server.quit()
+
+
+def send_email(subject, body, file_path):
+
+    load_dotenv()
+    sender = os.getenv("sender_email")
+    # Créer le message de l'e-mail
+    msg = MIMEMultipart()
+    msg['From'] = sender
+    msg['To'] = os.getenv("recipient")
+    msg['Subject'] = subject
+    if os.getenv("cc_email"):
+        msg['Cc'] = os.getenv("cc_email")
+
+    # Ajouter le corps de l'e-mail
+    msg.attach(MIMEText(body, 'plain'))
+
+    # Ajouter la pièce jointe (le fichier Excel)
+    filename = os.path.basename(file_path)
+    attachment = MIMEBase('application', 'octet-stream')
+    try:
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"Le fichier {file_path} n'existe pas.")
+
+        with open(file_path, 'rb') as file:
+            attachment.set_payload(file.read())
+
+            encoders.encode_base64(attachment)
+            attachment.add_header('Content-Disposition', f'attachment; filename={filename}')
+            msg.attach(attachment)
+    except FileNotFoundError as e:
+        print(f"Erreur : {e}")
+        return  # Arrêter la fonction si le fichier n'est pas trouvé
+
+    except Exception as e:
+        print(f"Erreur lors du traitement de la pièce jointe : {e}")
+        return  # Arrêter la fonction si une autre erreur survient
+
+    # Connexion au serveur SMTP
+    server = None
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)  # Utilisez le serveur SMTP de votre choix
+        server.starttls()  # Utiliser le TLS pour sécuriser la connexion
+        sender_password = os.getenv("sender_password")
+        server.login(sender, sender_password)
 
         # Envoyer l'e-mail
         text = msg.as_string()
