@@ -75,15 +75,28 @@ def send_email_with_attachment(sender_email, sender_password, recipient_email, s
 
 
 def send_email(subject, body, file_path):
-
     load_dotenv()
-    sender = os.getenv("sender_email")
+    sender_email = os.getenv("sender_email")
+    recipient_email = os.getenv("recipient_email")
+    cc_email = os.getenv("cc_email")
+    sender_password = os.getenv("sender_password")
+
+    # Vérifier que les variables d'environnement critiques sont bien chargées
+    if not sender_email:
+        print("Erreur : sender_email n'est pas défini dans le fichier .env")
+        return
+    if not recipient_email:
+        print("Erreur : recipient_email n'est pas défini dans le fichier .env")
+        return
+    if not sender_password:
+        print("Erreur : sender_password n'est pas défini dans le fichier .env")
+        return
     # Créer le message de l'e-mail
     msg = MIMEMultipart()
-    msg['From'] = sender
-    msg['To'] = os.getenv("recipient")
+    msg['From'] = sender_email
+    msg['To'] = recipient_email
     msg['Subject'] = subject
-    if os.getenv("cc_email"):
+    if cc_email:
         msg['Cc'] = os.getenv("cc_email")
 
     # Ajouter le corps de l'e-mail
@@ -116,11 +129,16 @@ def send_email(subject, body, file_path):
         server = smtplib.SMTP('smtp.gmail.com', 587)  # Utilisez le serveur SMTP de votre choix
         server.starttls()  # Utiliser le TLS pour sécuriser la connexion
         sender_password = os.getenv("sender_password")
-        server.login(sender, sender_password)
+        server.login(sender_email, sender_password)
+
+        # Créer la liste des destinataires
+        recipients = [recipient_email]
+        if cc_email:
+            recipients.append(cc_email)
 
         # Envoyer l'e-mail
         text = msg.as_string()
-        server.sendmail(sender_email, recipient_email, text)
+        server.sendmail(sender_email, recipients, text)
         print(f"E-mail envoyé avec succès à {recipient_email}")
 
     except Exception as e:
@@ -128,4 +146,5 @@ def send_email(subject, body, file_path):
 
     finally:
         # Fermer la connexion au serveur SMTP
-        server.quit()
+        if server:
+            server.quit()

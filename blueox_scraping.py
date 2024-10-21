@@ -87,6 +87,7 @@ def scrape_listings_from_html(file_path):
 
     return listings_data
 
+
 if __name__ == "__main__":
     start_time = time.time()
     load_dotenv()
@@ -109,7 +110,7 @@ if __name__ == "__main__":
 
     end_time = time.time()
     duration = (end_time - start_time)
-    print("durée totale en secondes: ", int(duration), "pour: ", nb_properties )
+    print("durée totale en secondes: ", int(duration), "pour: ", nb_properties)
     body = f"Le scraping du broker Blue-ox au {current_date}, \nconcerne {nb_properties} terrains ou bâtiments à vendre.\nMerci de les consulter en fichier joint"
 
     sender_email = os.getenv("sender_email")
@@ -119,6 +120,3 @@ if __name__ == "__main__":
     cc_email = os.getenv("cc_email")
 
     send_email_with_attachment(sender_email, sender_password, recipient_email, subject, body, file_path, cc_email)
-
-
-

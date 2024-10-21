@@ -3,6 +3,7 @@ from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 import time
 from utils import export_to_excell
+from util import send_email
 from dotenv import load_dotenv
 
 
@@ -93,19 +94,14 @@ if __name__ == "__main__":
     load_dotenv()
     result_list = scrape_properties()
     nb_properties = len(result_list)
-    filename, file_path, current_date = export_to_excell(result_list, "Land_retail_us_south_scraping")
+    filename, file_path, current_date = export_to_excell(result_list, "Duwest")
     end_time = time.time()
     duration = (end_time - start_time)
+
     print("durée totale en secondes: ", int(duration), "pour: ", nb_properties )
     body = f"Le scraping du broker DuWest au {current_date}, \nconcerne {nb_properties} terrains ou bâtiments à vendre.\nMerci de les consulter en fichier joint"
-
-    sender_email = os.getenv("sender_email")
-    sender_password = os.getenv("sender_password")
-    recipient_email = os.getenv("recipient")
     subject = "[DuWest Excel en pièce jointe]"
-    cc_email = os.getenv("cc_email")
-
-    # send_email_with_attachment(sender_email, sender_password, recipient_email, subject, body, file_path, cc_email)
+    send_email(subject, body, file_path)
 
 
 
